@@ -32,7 +32,7 @@
 TARGET=CY8CKIT-062S2-43012
 
 # Name of application (used to derive name of final linked file).
-APPNAME=mtb-example-psoc6-emwin-eink
+APPNAME=emWin_eInk_2_13_FreeRTOS
 
 # Name of toolchain to use. Options include:
 #
@@ -67,7 +67,7 @@ VERBOSE=
 # ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
 # added to the build
 #
-COMPONENTS=EMWIN_OSNTS
+COMPONENTS=EMWIN_OSNTS FREERTOS
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
 DISABLE_COMPONENTS=

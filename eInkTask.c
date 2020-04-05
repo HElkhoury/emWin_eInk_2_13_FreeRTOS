@@ -53,6 +53,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "GUI.h"
+#include "SSD1306Driver.h"
+
 /*******************************************************************************
 * Function Name: void eInkTask(void *arg)
 ********************************************************************************
@@ -73,7 +76,6 @@
 *******************************************************************************/
 void eInkTask(void *arg)
 {
-    //uint8_t pageNumber = 0;
 
     /* Configure Switch and LEDs*/
     cyhal_gpio_init( CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, 
@@ -83,20 +85,24 @@ void eInkTask(void *arg)
     cyhal_gpio_init( CYBSP_LED_RGB_GREEN, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 
                      CYBSP_LED_STATE_OFF);
     
-    /* Initialize EmWin driver*/
-    //GUI_Init();
-    
-    /* Start the eInk display interface and turn on the display power */
-    //Cy_EINK_Start(20);
-    //Cy_EINK_Power(1);
+    cyhal_i2c_t I2C;
 
-    /* Show the startup screen */
-    //ShowStartupScreen();
-    //vTaskDelay(2000);
+    /* Configuration to initialize the I2C block */
+    static cyhal_i2c_cfg_t i2c_config = {
+    		.is_slave = false,
+			.frequencyhal_hz = 400000
+    };
+    cyhal_i2c_init(&I2C, CYBSP_I2C_SDA, CYBSP_I2C_SCL, NULL);
+    cyhal_i2c_configure(&I2C, &i2c_config);
 
-    /* Show the instructions screen */
-    //ShowInstructionsScreen();
-    //WaitforSwitchPressAndRelease();
+    SSD1306DriverInit(&I2C,0x3C);
+
+    GUI_Init();
+    GUI_SetColor(GUI_WHITE);
+    GUI_SetBkColor(GUI_BLACK);
+    GUI_SetFont(GUI_FONT_8_ASCII);
+    GUI_SetTextAlign(GUI_TA_CENTER);
+    GUI_DispStringAt("Hello World", GUI_GetScreenSizeX()/2,GUI_GetScreenSizeY()/2 - GUI_GetFontSizeY()/2);
 
     for(;;)
     {
