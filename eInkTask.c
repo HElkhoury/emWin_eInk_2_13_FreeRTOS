@@ -53,53 +53,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cy_retarget_io.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "eInkGdew0213z16Driver.h"
-
-#define GxEPD_WHITE 0x00
-#define GxEPD_BLACK 0x01
-#define GxEPD_RED   0x02
-#define GxEPD_RED   0x02
-
-void fillScreen(uint16_t color)
-{
-	uint8_t black = 0x00;
-	uint8_t red = 0x00;
-	if (color == GxEPD_WHITE){}
-	else if (color == GxEPD_BLACK) black = 0xFF;
-	else if (color == GxEPD_RED) red = 0xFF;
-	else if ((color & 0xF100) > (0xF100 / 2))  red = 0xFF;
-	else if ((((color & 0xF100) >> 11) + ((color & 0x07E0) >> 5) + (color & 0x001F)) < 3 * 255 / 2) black = 0xFF;
-	for (uint16_t x = 0; x < sizeof(_black_buffer); x++)
-	{
-		_black_buffer[x] = black;
-		_red_buffer[x] = red;
-	}
-}
-
-void update(void)
-{
-	EinkGdew0213z16_WriteCommandSPI(0x10);
-	for (uint32_t i = 0; i < GxGDEW0213Z16_BUFFER_SIZE; i++)
-	{
-		EinkGdew0213z16_WriteDataSPI((i < sizeof(_black_buffer)) ? ~_black_buffer[i] : 0xFF);
-	}
-	EinkGdew0213z16_WriteCommandSPI(0x13);
-	for (uint32_t i = 0; i < GxGDEW0213Z16_BUFFER_SIZE; i++)
-	{
-		EinkGdew0213z16_WriteDataSPI((i < sizeof(_red_buffer)) ? ~_red_buffer[i] : 0xFF);
-	}
-	EinkGdew0213z16_WriteCommandSPI(0x12); //display refresh
-	while(EinkGdew0213z16_IsBusy());
-}
-
-void sleep(void)
-{
-	EinkGdew0213z16_WriteCommandSPI(0x02);      //power off
-	while(EinkGdew0213z16_IsBusy());
-	EinkGdew0213z16_WriteCommandSPI(0x07);     //deep sleep
-	EinkGdew0213z16_WriteDataSPI(0xA5);
-}
+#include "GUI_Paint.h"
+#include "EPD_2in13bc.h"
+#include "ImageData.h"
 
 /*******************************************************************************
 * Function Name: void eInkTask(void *arg)
@@ -127,48 +86,75 @@ void eInkTask(void *arg)
     cyhal_gpio_init( CYBSP_LED_RGB_GREEN, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 
                      CYBSP_LED_STATE_OFF);
 
-    EinkGdew0213z16_DriverInit();
+    printf("EPD_2IN13BC_test Demo\r\n");
+    EPD_2IN13BC_DriverInit();
+    printf("e-Paper Init and Clear...\r\n");
+    EPD_2IN13BC_Init();
+    EPD_2IN13BC_Clear();
+    vTaskDelay(10000);
 
-    if(cyhal_gpio_read(EINK_DISPRST))
-    {
-    	/* Reset the Driver IC */
-    	EinkGdew0213z16_RstActive;
-    	vTaskDelay(1);
-    	EinkGdew0213z16_RstInactive;
-    	vTaskDelay(1);
+    //Create a new image cache named IMAGE_BW and fill it with white
+    uint8_t *BlackImage, *RYImage; // Red or Yellow
+    uint16_t Imagesize = ((EPD_2IN13BC_WIDTH % 8 == 0)? (EPD_2IN13BC_WIDTH / 8 ): (EPD_2IN13BC_WIDTH / 8 + 1)) * EPD_2IN13BC_HEIGHT;
+    if((BlackImage = (uint8_t *)malloc(Imagesize)) == NULL) {
+    	printf("Failed to apply for black memory...\r\n");
     }
-    else
-    {
-    	EinkGdew0213z16_RstInactive;
-    	vTaskDelay(1);
+    if((RYImage = (uint8_t *)malloc(Imagesize)) == NULL) {
+    	printf("Failed to apply for red memory...\r\n");
     }
+    printf("NewImage:BlackImage and RYImage\r\n");
+    Paint_NewImage(BlackImage, EPD_2IN13BC_WIDTH, EPD_2IN13BC_HEIGHT, 270, WHITE);
+    Paint_NewImage(RYImage, EPD_2IN13BC_WIDTH, EPD_2IN13BC_HEIGHT, 270, WHITE);
 
-	/* Configure booster Soft Start */
-	EinkGdew0213z16_WriteCommandSPI(0x06);
-	EinkGdew0213z16_WriteDataSPI(0x17);
-	EinkGdew0213z16_WriteDataSPI(0x17);
-	EinkGdew0213z16_WriteDataSPI(0x17);
-	/* Power On */
-	EinkGdew0213z16_WriteCommandSPI(0x04);
-	/* Check busy signal */
-	while(EinkGdew0213z16_IsBusy());
-	/* Panel setting */
-	EinkGdew0213z16_WriteCommandSPI(0x00);
-	EinkGdew0213z16_WriteDataSPI(0x0F);
-	/* Resolution setting */
-	EinkGdew0213z16_WriteCommandSPI(0x61);
-	EinkGdew0213z16_WriteDataSPI(0x68);
-	EinkGdew0213z16_WriteDataSPI(0x00);
-	EinkGdew0213z16_WriteDataSPI(0xD4);
-	/* Vcom and data interval setting */
-	EinkGdew0213z16_WriteCommandSPI(0x50);
-	EinkGdew0213z16_WriteDataSPI(0x37);
+    //Select Image
+    Paint_SelectImage(BlackImage);
+    Paint_Clear(WHITE);
+    Paint_SelectImage(RYImage);
+    Paint_Clear(WHITE);
 
-	fillScreen(GxEPD_RED);
+    printf("show image for array\r\n");
+    EPD_2IN13BC_Display(gImage_2in13c_b, gImage_2in13c_y);
+    vTaskDelay(10000);
 
-	update();
+    /*Horizontal screen*/
+    //1.Draw black image
+    printf("Draw black image\r\n");
+    Paint_SelectImage(BlackImage);
+    Paint_Clear(WHITE);
+    Paint_DrawPoint(5, 70, BLACK, DOT_PIXEL_1X1, DOT_STYLE_DFT);
+    Paint_DrawPoint(5, 80, BLACK, DOT_PIXEL_2X2, DOT_STYLE_DFT);
+    Paint_DrawLine(20, 70, 50, 100, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+    Paint_DrawLine(50, 70, 20, 100, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+    Paint_DrawRectangle(60, 70, 90, 100, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+    Paint_DrawCircle(125, 85, 15, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
+    Paint_DrawString_EN(5, 15, "Testing black", &Font12, WHITE, BLACK);
 
-	//sleep();
+    //2.Draw red image
+    printf("Draw red image\r\n");
+    Paint_SelectImage(RYImage);
+    Paint_Clear(WHITE);
+    Paint_DrawPoint(5, 90, RED, DOT_PIXEL_3X3, DOT_STYLE_DFT);
+    Paint_DrawPoint(5, 100, RED, DOT_PIXEL_4X4, DOT_STYLE_DFT);
+    Paint_DrawLine(125, 70, 125, 100, RED, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
+    Paint_DrawLine(110, 85, 140, 85, RED, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
+    Paint_DrawRectangle(20, 70, 50, 100, RED, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
+    Paint_DrawCircle(165, 85, 15, RED, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+    Paint_DrawString_EN(5, 0, "This is not easy", &Font12, BLACK, WHITE);
+    Paint_DrawNum(5, 50, 1234567890, &Font20, WHITE, RED);
+
+    printf("EPD_Display\r\n");
+    EPD_2IN13BC_Display(BlackImage, RYImage);
+    vTaskDelay(10000);
+
+    printf("Clear...\r\n");
+    EPD_2IN13BC_Clear();
+
+    printf("Goto Sleep...\r\n");
+    EPD_2IN13BC_Sleep();
+    free(BlackImage);
+    free(RYImage);
+    BlackImage = NULL;
+    RYImage = NULL;
 
     for(;;)
     {
