@@ -52,6 +52,117 @@ Sequence per datasheet:
   </a>
 </p>
 
+### Important Notice!
+___
+
+If you look at the high level spec for the display, you will notice that this specific display does not allow partial refresh. which means that you have to update the complete display even if you changed a single pixel.   
+Issue number 2 is that it take a LONG time (in terms of MCU time) to update the display. The specification states 16 seconds. So this makes a cool display only usable for static usage. So you can use it to display information which does not change, or changes very very sowy. A thought is a battery powered wine fridge temperature and humidity meter which you can place inside the fridge and will only wake up once a minute or so and measure, update, then go back to deep sleep. I'm sure there are other projects, but you know the limitation before you start. There are other displays which support partial refresh, still requiring about 1s to update. enjoy!   
+
+<table border="0" cellpadding="0" cellspacing="0" style="width: 750px; border-collapse: collapse; margin-left: -0.25pt;">
+<tbody>
+<tr style="height: 31px;">
+<td style="border-top: windowtext 1pt solid; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Model</span></span></span></p>
+</td>
+<td style="border-top: windowtext 1pt solid; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">GDEW0213Z16</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 25px;">
+<td style="border-top-style: none; height: 25px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Dimension</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 25px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">59.2(H)&times;29.2 (V) &times;0.98(D)mm</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Screen Size</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">2.13inch</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Resolution</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">212(H)&times;104(V)</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Pixel Pitch</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">0.229&times;0.228mm</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 29px;">
+<td style="border-top-style: none; height: 29px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Active Area</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 29px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">48.55 (H)&times;23.80 (V)mm</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">Weight</span></span></span></p>
+</td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<p align="left">
+<span style="color: #000000;"><span style="font-size: 14px;"><span style="font-family: arial,helvetica,sans-serif;">3.36&plusmn;0.5</span></span></span></p>
+</td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">Current of the refresh(mA)</span></span></span></td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">8</span></span></span></td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">Power consumption of the refresh(mW)</span></span></span></td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">26.4</span></span></span></td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">Standby power consumption Pc(mW)</span></span></span></td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">0.0165</span></span></span></td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">Time of refresh(s)</span></span></span></td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">16</span></span></span></td>
+</tr>
+<tr style="height: 31px;">
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left: windowtext 1pt solid; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">Time of partial refresh(s)</span></span></span></td>
+<td style="border-top-style: none; height: 31px; border-right: windowtext 1pt solid; width: 291px; border-bottom: windowtext 1pt solid; padding-bottom: 0cm; padding-top: 0cm; padding-left: 5.4pt; border-left-style: none; padding-right: 5.4pt; background-size: initial; background-origin: initial; background-clip: initial;">
+<span style="color:#000000;"><span style="font-size:14px;"><span style="font-family:arial,helvetica,sans-serif;">--</span></span></span></td>
+</tr>
+</tbody>
+</table>
+
 ### Contributing
 ___
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
