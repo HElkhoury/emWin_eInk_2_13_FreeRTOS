@@ -52,6 +52,54 @@
 #include "cybsp.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "cy_retarget_io.h"
+
+#include "eInkGdew0213z16Driver.h"
+
+#define GxEPD_WHITE 0x00
+#define GxEPD_BLACK 0x01
+#define GxEPD_RED   0x02
+#define GxEPD_RED   0x02
+
+void fillScreen(uint16_t color)
+{
+	uint8_t black = 0x00;
+	uint8_t red = 0x00;
+	if (color == GxEPD_WHITE){}
+	else if (color == GxEPD_BLACK) black = 0xFF;
+	else if (color == GxEPD_RED) red = 0xFF;
+	else if ((color & 0xF100) > (0xF100 / 2))  red = 0xFF;
+	else if ((((color & 0xF100) >> 11) + ((color & 0x07E0) >> 5) + (color & 0x001F)) < 3 * 255 / 2) black = 0xFF;
+	for (uint16_t x = 0; x < sizeof(_black_buffer); x++)
+	{
+		_black_buffer[x] = black;
+		_red_buffer[x] = red;
+	}
+}
+
+void update(void)
+{
+	EinkGdew0213z16_WriteCommandSPI(0x10);
+	for (uint32_t i = 0; i < GxGDEW0213Z16_BUFFER_SIZE; i++)
+	{
+		EinkGdew0213z16_WriteDataSPI((i < sizeof(_black_buffer)) ? ~_black_buffer[i] : 0xFF);
+	}
+	EinkGdew0213z16_WriteCommandSPI(0x13);
+	for (uint32_t i = 0; i < GxGDEW0213Z16_BUFFER_SIZE; i++)
+	{
+		EinkGdew0213z16_WriteDataSPI((i < sizeof(_red_buffer)) ? ~_red_buffer[i] : 0xFF);
+	}
+	EinkGdew0213z16_WriteCommandSPI(0x12); //display refresh
+	while(EinkGdew0213z16_IsBusy());
+}
+
+void sleep(void)
+{
+	EinkGdew0213z16_WriteCommandSPI(0x02);      //power off
+	while(EinkGdew0213z16_IsBusy());
+	EinkGdew0213z16_WriteCommandSPI(0x07);     //deep sleep
+	EinkGdew0213z16_WriteDataSPI(0xA5);
+}
 
 /*******************************************************************************
 * Function Name: void eInkTask(void *arg)
@@ -73,54 +121,58 @@
 *******************************************************************************/
 void eInkTask(void *arg)
 {
-    //uint8_t pageNumber = 0;
-
     /* Configure Switch and LEDs*/
-    cyhal_gpio_init( CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, 
-                     CYBSP_BTN_OFF);
     cyhal_gpio_init( CYBSP_LED_RGB_RED, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 
                      CYBSP_LED_STATE_OFF);
     cyhal_gpio_init( CYBSP_LED_RGB_GREEN, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 
                      CYBSP_LED_STATE_OFF);
-    
-    /* Initialize EmWin driver*/
-    //GUI_Init();
-    
-    /* Start the eInk display interface and turn on the display power */
-    //Cy_EINK_Start(20);
-    //Cy_EINK_Power(1);
 
-    /* Show the startup screen */
-    //ShowStartupScreen();
-    //vTaskDelay(2000);
+    EinkGdew0213z16_DriverInit();
 
-    /* Show the instructions screen */
-    //ShowInstructionsScreen();
-    //WaitforSwitchPressAndRelease();
+    if(cyhal_gpio_read(EINK_DISPRST))
+    {
+    	/* Reset the Driver IC */
+    	EinkGdew0213z16_RstActive;
+    	vTaskDelay(1);
+    	EinkGdew0213z16_RstInactive;
+    	vTaskDelay(1);
+    }
+    else
+    {
+    	EinkGdew0213z16_RstInactive;
+    	vTaskDelay(1);
+    }
+
+	/* Configure booster Soft Start */
+	EinkGdew0213z16_WriteCommandSPI(0x06);
+	EinkGdew0213z16_WriteDataSPI(0x17);
+	EinkGdew0213z16_WriteDataSPI(0x17);
+	EinkGdew0213z16_WriteDataSPI(0x17);
+	/* Power On */
+	EinkGdew0213z16_WriteCommandSPI(0x04);
+	/* Check busy signal */
+	while(EinkGdew0213z16_IsBusy());
+	/* Panel setting */
+	EinkGdew0213z16_WriteCommandSPI(0x00);
+	EinkGdew0213z16_WriteDataSPI(0x0F);
+	/* Resolution setting */
+	EinkGdew0213z16_WriteCommandSPI(0x61);
+	EinkGdew0213z16_WriteDataSPI(0x68);
+	EinkGdew0213z16_WriteDataSPI(0x00);
+	EinkGdew0213z16_WriteDataSPI(0xD4);
+	/* Vcom and data interval setting */
+	EinkGdew0213z16_WriteCommandSPI(0x50);
+	EinkGdew0213z16_WriteDataSPI(0x37);
+
+	fillScreen(GxEPD_RED);
+
+	update();
+
+	//sleep();
 
     for(;;)
     {
-        cyhal_gpio_write( CYBSP_LED_RGB_GREEN, CYBSP_LED_STATE_ON);
-
-        /* Using pageNumber as index, update the display with a demo screen
-            Following are the functions that are called in sequence
-                ShowFontSizesNormal()
-                ShowFontSizesBold()
-                ShowTextModes()
-                ShowTextWrapAndOrientation()
-                Show2DGraphics1()
-                Show2DGraphics2()
-        */
-        //(*demoPageArray[pageNumber])();
-
+        cyhal_gpio_toggle( CYBSP_LED_RGB_GREEN);
         vTaskDelay(500);
-        cyhal_gpio_write( CYBSP_LED_RGB_GREEN, CYBSP_LED_STATE_OFF);
-
-        /* Wait for a switch press event */
-        //WaitforSwitchPressAndRelease();
-
-        /* Cycle through demo pages */
-        //pageNumber = (pageNumber+1) % NUMBER_OF_DEMO_PAGES;
-        vTaskDelay(1000);
     }
 }
