@@ -16,7 +16,7 @@
 ___
 I had purchased the eInk display a while back, and to be honest, I do not recalls from where. Good thing I also bought the breakout board which would then allow me to easily connect to them via a standard breadboard.   
 The display I am using is made by Goodisplay, same with the board. I was able to get the datasheet and the schematic for the products I am using, so will add them for reference.   
-TODO: Add links to the datasheet and schematic   
+You can find the details of the displays and the board supporting them on the [GDEW0213Z16 Display Product Page](https://www.good-display.com/products_detail/productId%3d310.html). I included the relevant documents here, but I will not be updating with new versions, so always go to the source linked above.   
 This project is based on the [P6FreeRTOS w/ Tracealyzer](https://github.com/HElkhoury/P6FreeRTOSTickless), so it has support for tracealyzer if you chose to enable it. also has support for the low power operation.   
 The library was taken from [waveshare eink code](https://github.com/waveshare/e-Paper) and adapted to work with PSoC6.   
 
