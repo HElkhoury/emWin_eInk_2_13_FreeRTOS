@@ -5,7 +5,9 @@
 ![](https://img.shields.io/github/issues/HElkhoury/emWin_eInk_2_13_FreeRTOS) 
 ![](https://img.shields.io/github/license/HElkhoury/emWin_eInk_2_13_FreeRTOS)
 
-# emWin_eInk_2_13_FreeRTOS
+# eInk_2_13_FreeRTOS
+A sample library to control an eInk display
+
 <p align="center">
   <a href="https://github.com/HElkhoury/emWin_eInk_2_13_FreeRTOS">
     <img src="images/eInkDisplay.png" alt="Screenshot" width="600">
